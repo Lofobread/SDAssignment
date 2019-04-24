@@ -1,0 +1,172 @@
+package com.company;
+
+// ---------*---------*---------*---------*
+// The use of static imports is something that should be used carefully.
+// I have only ever used this technique for the project wide constants.
+//
+import static com.company.ProjConstants.*;
+
+public class BasicStatistics {
+
+    /* ---------*---------*---------*---------*---------*---------*---------*---------*
+    // Class Level Variables
+    // ---------*---------*---------*---------*---------*---------*---------*--------- */
+
+    // As discussed in class we are using a class populated with Project Constants to
+    // ensure help manage the project data. This ensures that each class can access the
+    // constant values, but in the event that a change is needed/required that this will
+    // only need to be made in one location, or file.
+    //
+    // Notice: If I had not done the "static import com.company.ProjConstants.*;" then
+    //         the use of the constant would have been written as:
+    //
+    //         private int[] Data = new int[ProjConstants.MAXDATA];
+    //
+    private int[] Data = new int[MAXDATA];
+    private int[] ModeData = new int[MAXDATA]; // you are to store the "Modes" into this array
+
+    // sets all values to invalid to allow some checking
+    private int sdItems     = INVALID;
+    private int sdNumModes  = INVALID;
+    private int sdMode      = INVALID;
+    private double sdMedian = INVALID;
+    private double sdAve    = INVALID;
+    private double sdVar    = INVALID;
+    private double sdDev    = INVALID;
+
+    // --------------------------------------------------
+    // The following method (procedure) will take a new data item (a parameter)
+    // and add it into the 1 Dimensional Array of data values to be used later.
+    //
+    //      Pre-Conditions:
+    //          - none
+    //
+    public void addNewDataItem(int dataItem){
+
+        // In this case we have to check if we are adding the first data item.
+        // If sdItems = -1 then no data has been previously added so we set
+        // the number of items to zero
+
+    }
+
+    // --------------------------------------------------
+    // The following method (function) will return the total number of data
+    // items currently stored
+
+    //      Pre-Conditions:
+    //          - none
+    //
+    public int getNumberOfDataItems(){
+        return sdItems;
+    }
+
+
+    // --------------------------------------------------
+    // The following method (function) returns a double precision value which
+    // is the median of all of the data values
+    //
+    //      Pre-Conditions:
+    //          - at least one data has been added
+    //
+    public double calcMedian(){
+
+        return sdMedian;
+
+    }
+
+    // --------------------------------------------------
+    // The following method (function) returns a integer value which
+    // is the number of modes in the set of all of the data values
+    //
+    //      Pre-Conditions:
+    //          - at least one data has been added
+    //          - the calcMode method must have been previously run
+    //
+    public int getNumOfModes(){
+
+        return sdNumModes;
+    }
+
+    // --------------------------------------------------
+    // The following method (function) returns nothing but calculates the
+    // Mode(s) for the set of all of the data values
+    //
+    //      Pre-Conditions:
+    //          - at least one data has been added
+    //
+
+    public int calcMode(){
+
+        return sdMode;
+    }
+
+
+
+    // --------------------------------------------------
+    // The following method (function) returns a double precision value which
+    // is the average of all of the data values
+    //
+    //      Pre-Conditions:
+    //          - at least one data has been added
+    //
+    public double calcAverage(){
+
+        // Things to consider:
+        // -------------------
+        // 1) Add all data values together (recall sdItems is the number of data items in the
+        //    Data storage array
+        //
+        // 2) calculate the average, the "(double)" below instructs the computer to treat
+        //    the integer value of "sdItems" as a real number
+        //
+        // 3) Pre-Conditions have not been met
+        // returns the calculated average
+
+        return sdAve;
+    }
+
+    // --------------------------------------------------
+    // The following method (function) returns a double precision value which is the Variance of all
+    // of the data values. If there is no data, or if the average has not been calculated
+    // then it returns INVALID
+    //
+    //      Pre-Conditions:
+    //          - at least one data has been added
+    //          - the average must have been calculated
+    //
+    public double calcVariance(){
+
+        // Things to consider:
+        // -------------------
+        // 1) Checks that data entry, and average have been done
+        //
+        // 2) Loop over all data and calculate variance
+        //
+        // 3) The calculation above could been done using Math.pow( (Data[i] - sdAve), 2)
+        // 4) to calculate the variance we need to divide by the number of data items,
+        // 5) Pre-Conditions have not been met
+
+        return sdVar;
+    }
+
+    // --------------------------------------------------
+    // The following method (function) returns a double precision value which is the Standard
+    // Deviation of all of the data values. If there is no data, no average, or if
+    // the variance has not been calculated then it returns INVALID
+    //
+    //      Pre-Conditions:
+    //          - at least one data has been added
+    //          - the average must have been calculated
+    //          - the variance must have been calculated
+    //
+    public double calcStandardDeviation(){
+
+        // Things to consider:
+        // -------------------
+        // 1) Check that data entry, average, and variance have been done
+        // 2) the calculation can be done using Math.sqrt(sdVar);
+
+        return sdDev;
+    }
+
+}
