@@ -4,7 +4,7 @@ package com.company;
 // The use of static imports is something that should be used carefully.
 // I have only ever used this technique for the project wide constants.
 //
-import java.util.Arrays;
+import java.util.*;
 
 
 import static com.company.ProjConstants.*;
@@ -21,10 +21,23 @@ public class BasicStatistics {
     private int sdMode      = INVALID;
     private double sdMedian = INVALID;
     private double sdAve    = INVALID;
-    private double sdVar    = INVALID;
+    private double sdVar    = 0;
     private double sdDev    = INVALID;
-   
+
     private int total = 0;
+
+    public double getsdItems(){
+        return sdItems;
+    }
+
+    public double getsdVar(){
+        return sdVar;
+    }
+
+    //Declaring Starting Index to avoid repetition
+    int DataStrtIndex = Data.length - sdItems;
+
+
 
     // --------------------------------------------------
     // The following method (procedure) will take a new data item (a parameter)
@@ -33,18 +46,12 @@ public class BasicStatistics {
     //      Pre-Conditions:
     //          - none
     //
-    Arrays.sort(Data);
-    public void addNewDataItem(int dataItem){
 
-        if(sdItems == INVALID){
-            
-            sdItems = 0;
+    public void addNewDataItem(int newItem){
+        sdItems++;
+        Data[sdItems] = newItem;
 
-
-
-
-        }
-        Data[sdItems] = dataItem;
+        total += newItem;
 
         // In this case we have to check if we are adding the first data item.
         // If sdItems = -1 then no data has been previously added so we set
@@ -72,15 +79,19 @@ public class BasicStatistics {
     //          - at least one data has been added
     //
     public double calcMedian(){
-
-
-
+        if (sdItems % 2 == 1) {
+            sdMedian = Data[(int) (DataStrtIndex + ((float) sdItems) / 2)];
+            //If the total item count is not odd, then assume the count is even and take the two middle most numbers
+            //in the array and divide by 2
+        } else {
+            sdMedian = (Data[(DataStrtIndex + sdItems / 2)] + Data[((DataStrtIndex + sdItems / 2) - 1)]) / 2;
+        }
 
 
 
         return sdMedian;
 
-    }
+    } //end For Median
 
     // --------------------------------------------------
     // The following method (function) returns a integer value which
@@ -104,6 +115,38 @@ public class BasicStatistics {
     //
 
     public int calcMode(){
+        int mode = 0;
+        int maxCount = 0;
+        for (int i = 0; i < sdItems; i++) {
+            int count = 0;
+            boolean modeExists = false;
+            int r;
+            for (r = 0; r < sdItems; r++) {
+                if (Data[DataStrtIndex + i] == Data[DataStrtIndex + r]) {
+                    count++;
+                }
+                for (int k = 0; k < ModeData.length; k++) {
+                    if (Data[DataStrtIndex + i] == ModeData[k]) {
+                        modeExists = true;
+                        mode = i;
+                        //not sure what to declare mode as
+                    }
+                }
+                if (count == maxCount && !modeExists) {
+                    ModeData[sdNumModes] = Data[DataStrtIndex + i];
+                    sdNumModes++;
+                }
+                if (count > maxCount && !modeExists) {
+                    maxCount = count;
+                    ModeData = new int[MAXDATA];
+                    sdNumModes = 1;
+                    ModeData[0] = ModeData[DataStrtIndex + 1];
+                }
+            }
+        }
+
+
+
 
         return sdMode;
     }
@@ -129,6 +172,8 @@ public class BasicStatistics {
         //
         // 3) Pre-Conditions have not been met
         // returns the calculated average
+
+
 
         sdAve = total / sdItems;
 
