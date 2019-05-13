@@ -21,10 +21,10 @@ public class BasicStatistics {
     private int sdMode      = INVALID;
     private double sdMedian = INVALID;
     private double sdAve    = INVALID;
-    private double sdVar    = 0;
+    private double sdVar    = INVALID;
     private double sdDev    = INVALID;
-
-    private int total = 0;
+    boolean averageDone = false;
+    boolean dataDone = false;
 
     public double getsdItems(){
         return sdItems;
@@ -48,14 +48,13 @@ public class BasicStatistics {
     //
 
     public void addNewDataItem(int newItem){
-        sdItems++;
+
+       if (sdItems == INVALID){
+           sdItems = 0;
+       }
+
         Data[sdItems] = newItem;
-
-        total += newItem;
-
-        // In this case we have to check if we are adding the first data item.
-        // If sdItems = -1 then no data has been previously added so we set
-        // the number of items to zero
+        sdItems++;
 
     }
 
@@ -86,8 +85,6 @@ public class BasicStatistics {
         } else {
             sdMedian = (Data[(DataStrtIndex + sdItems / 2)] + Data[((DataStrtIndex + sdItems / 2) - 1)]) / 2;
         }
-
-
 
         return sdMedian;
 
@@ -130,7 +127,7 @@ public class BasicStatistics {
                         modeExists = true;
 
                     }
-                     if (count == maxCount && !modeExists) {
+                    if (count == maxCount && !modeExists) {
                         ModeData[sdNumModes] = Data[DataStrtIndex + i];
                         sdNumModes++;
                     }
@@ -170,9 +167,20 @@ public class BasicStatistics {
         //
         // 3) Pre-Conditions have not been met
         // returns the calculated average
+
+        int total = 0;
+
+        for(int i = 0; i < sdItems; i++){
+            total = total + Data[i];
+        }
+
         sdAve = total / sdItems;
 
-        return (int)sdAve;
+        if (DBG){
+            System.out.println("Average " + sdAve);
+        }
+
+        return sdAve;
     }
 
     // --------------------------------------------------
@@ -196,6 +204,13 @@ public class BasicStatistics {
         // 4) to calculate the variance we need to divide by the number of data items,
         // 5) Pre-Conditions have not been met
 
+
+        //make for loop to scan through data then check phone for photo
+        for(int i = 0 )
+
+
+
+
         return sdVar;
     }
 
@@ -216,7 +231,30 @@ public class BasicStatistics {
         // 1) Check that data entry, average, and variance have been done
         // 2) the calculation can be done using Math.sqrt(sdVar);
 
+        if (sdVar != INVALID){
+            Math.sqrt(sdVar);
+        }
+
         return sdDev;
     }
+    // --------------------------------------------------
+// The following method (function) returns a copy of the Mode Data stored in the ModeData array.
+// If there is more than one mode then this will be needed to display all modes.
+// Pre-Conditions:
+// - at least one data has been added
+//
+
+    public int[] getModeData(){
+
+        return ModeData;
+    }
+
+// --------------------------------------------------
+// The following method (function) returns a single Mode (the first mode),
+// but calculates the Mode(s) for the set of all of the data values
+//
+// Pre-Conditions:
+// - at least one data has been added
+//
 
 }
