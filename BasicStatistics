@@ -4,6 +4,7 @@ package com.company;
 // The use of static imports is something that should be used carefully.
 // I have only ever used this technique for the project wide constants.
 //
+
 import java.util.*;
 
 
@@ -16,27 +17,13 @@ public class BasicStatistics {
 
 
     // sets all values to invalid to allow some checking
-    private int sdItems     = INVALID;
-    private int sdNumModes  = INVALID;
-    private int sdMode      = INVALID;
+    private int sdItems = INVALID;
+    private int sdNumModes = INVALID;
+    private int sdMode = INVALID;
     private double sdMedian = INVALID;
-    private double sdAve    = INVALID;
-    private double sdVar    = INVALID;
-    private double sdDev    = INVALID;
-    boolean averageDone = false;
-    boolean dataDone = false;
-
-    public double getsdItems(){
-        return sdItems;
-    }
-
-    public double getsdVar(){
-        return sdVar;
-    }
-
-    //Declaring Starting Index to avoid repetition
-    private int DataStrtIndex = Data.length - sdItems;
-
+    private double sdAve = INVALID;
+    private double sdVar = INVALID;
+    private double sdDev = INVALID;
 
 
     // --------------------------------------------------
@@ -47,11 +34,11 @@ public class BasicStatistics {
     //          - none
     //
 
-    public void addNewDataItem(int newItem){
+    public void addNewDataItem(int newItem) {
 
-       if (sdItems == INVALID){
-           sdItems = 0;
-       }
+        if (sdItems == INVALID) {
+            sdItems = 0;
+        }
 
         Data[sdItems] = newItem;
         sdItems++;
@@ -65,7 +52,7 @@ public class BasicStatistics {
     //      Pre-Conditions:
     //          - none
     //
-    public int getNumberOfDataItems(){
+    public int getNumberOfDataItems() {
         return sdItems;
     }
 
@@ -76,18 +63,23 @@ public class BasicStatistics {
     //
     //      Pre-Conditions:
     //          - at least one data has been added
-    //
-    public double calcMedian(){
+    public double calcMedian() {
+
+        Arrays.sort(Data);
+
+        int DataStrtIndex = Data.length - sdItems;
+
+        //If the total item count is not odd, then assume the count is even and take the two middle most numbers
+        //in the array and divide by 2
         if (sdItems % 2 == 1) {
-            sdMedian = Data[(int) ((DataStrtIndex + ((float) sdItems)) / 2)];
+            sdMedian = Data[(int) (DataStrtIndex + ((float) sdItems) / 2)];
             //If the total item count is not odd, then assume the count is even and take the two middle most numbers
             //in the array and divide by 2
         } else {
-            sdMedian = (Data[(DataStrtIndex + sdItems / 2)] + Data[((DataStrtIndex + sdItems / 2) - 1)]) / 2;
+
+            sdMedian = (Data[(DataStrtIndex + sdItems / 2)] + Data[(DataStrtIndex + sdItems / 2 - 1)]) / 2;
         }
-
         return sdMedian;
-
     } //end For Median
 
     // --------------------------------------------------
@@ -98,7 +90,7 @@ public class BasicStatistics {
     //          - at least one data has been added
     //          - the calcMode method must have been previously run
     //
-    public int getNumOfModes(){
+    public int getNumOfModes() {
 
         return sdNumModes;
     }
@@ -111,39 +103,54 @@ public class BasicStatistics {
     //          - at least one data has been added
     //
 
-    public int calcMode() {
+    public int calcMode(){
+
+        if(sdNumModes == ProjConstants.INVALID){
+            sdNumModes = 0;
+        }
 
         int maxCount = 0;
-        for (int i = 0; i < sdItems; i++){
+        for(int i = 0; i < sdItems; i++){
+
             int count = 0;
             boolean modeExists = false;
-            int r;
-            for (r = 1; r < sdItems; r++) {
-                if (Data[DataStrtIndex + i] == Data[DataStrtIndex + r]) {
+
+            for(int j = 0; j < sdItems; j++){
+                if(j < i && Data[i] == Data[j]){
+                    modeExists = true;
+                }
+
+                if (!modeExists && Data[i] == Data[j]){
                     count++;
                 }
-                for (int k = 0; k < ModeData.length; k++) {
-                    if (Data[DataStrtIndex + i] == ModeData[k]) {
-                        modeExists = true;
 
-                    }
-                    if (count == maxCount && !modeExists) {
-                        ModeData[sdNumModes] = Data[DataStrtIndex + i];
-                        sdNumModes++;
-                    }
-                    if (count > maxCount && !modeExists) {
-                        maxCount = count;
-                        ModeData = new int[MAXDATA];
-                        sdNumModes = 1;
-                        ModeData[0] = ModeData[DataStrtIndex + 1];
-                    }
+            }
 
-                }
+            if(count == maxCount){
+                ModeData[sdNumModes] = Data[i];
+                sdNumModes++;
+
+            }else if(count > maxCount){
+                ModeData = new int[ProjConstants.MAXDATA];
+                sdNumModes = 0;
+                maxCount = count;
+
+                ModeData[sdNumModes] = Data[i];
+                sdNumModes++;
+
             }
         }
+
+        for (int n: ModeData) {
+
+                System.out.println(n);
+
+        }
+
+        System.out.println(sdNumModes);
+
         return sdMode;
     }
-
 
 
 
@@ -155,7 +162,7 @@ public class BasicStatistics {
     //      Pre-Conditions:
     //          - at least one data has been added
     //
-    public double calcAverage(){
+    public double calcAverage() {
 
         // Things to consider:
         // -------------------
@@ -170,15 +177,12 @@ public class BasicStatistics {
 
         int total = 0;
 
-        for(int i = 0; i < sdItems; i++){
+        for (int i = 0; i < sdItems; i++) {
             total = total + Data[i];
         }
 
         sdAve = total / sdItems;
 
-        if (DBG){
-            System.out.println("Average " + sdAve);
-        }
 
         return sdAve;
     }
@@ -192,7 +196,7 @@ public class BasicStatistics {
     //          - at least one data has been added
     //          - the average must have been calculated
     //
-    public double calcVariance(){
+    public double calcVariance() {
 
         // Things to consider:
         // -------------------
@@ -206,10 +210,11 @@ public class BasicStatistics {
 
 
         //make for loop to scan through data then check phone for photo
-        for(int i = 0 )
+        for (int i = 0; i < sdItems; i++) {
 
+            sdVar = Math.pow((Data[i] - sdAve), 2) / sdItems;
 
-
+        }
 
         return sdVar;
     }
@@ -224,14 +229,14 @@ public class BasicStatistics {
     //          - the average must have been calculated
     //          - the variance must have been calculated
     //
-    public double calcStandardDeviation(){
+    public double calcStandardDeviation() {
 
         // Things to consider:
         // -------------------
         // 1) Check that data entry, average, and variance have been done
         // 2) the calculation can be done using Math.sqrt(sdVar);
 
-        if (sdVar != INVALID){
+        if (sdVar != INVALID) {
             Math.sqrt(sdVar);
         }
 
@@ -244,7 +249,7 @@ public class BasicStatistics {
 // - at least one data has been added
 //
 
-    public int[] getModeData(){
+    public int[] getModeData() {
 
         return ModeData;
     }
